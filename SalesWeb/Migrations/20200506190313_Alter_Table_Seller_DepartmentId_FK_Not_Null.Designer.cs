@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalesWeb.Data;
 
 namespace SalesWeb.Migrations
 {
     [DbContext(typeof(SalesWebContext))]
-    partial class SalesWebContextModelSnapshot : ModelSnapshot
+    [Migration("20200506190313_Alter_Table_Seller_DepartmentId_FK_Not_Null")]
+    partial class Alter_Table_Seller_DepartmentId_FK_Not_Null
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

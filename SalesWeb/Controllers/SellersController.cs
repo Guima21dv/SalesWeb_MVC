@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesWeb.Models;
 using SalesWeb.Models.ViewModels;
 using SalesWeb.Services;
+using SalesWeb.Services.Exceptions;
 
 namespace SalesWeb.Controllers
 {
@@ -64,6 +65,24 @@ namespace SalesWeb.Controllers
             return View(seller);
         }
 
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Seller seller = _service.FindById(id.Value);
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            List<Department> departments = _dpService.FindAll();
+            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+            return View(viewModel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
@@ -78,6 +97,28 @@ namespace SalesWeb.Controllers
         {
             _service.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if(id != seller.Id)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _service.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(NotFoundException e)
+            {
+                return NotFound();
+            }catch(DbConcurrencyException e)
+            {
+                return BadRequest();
+            }
         }
     }
 }

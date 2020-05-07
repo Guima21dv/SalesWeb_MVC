@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesWeb.Models;
+using SalesWeb.Models.ViewModels;
 using SalesWeb.Services;
 
 namespace SalesWeb.Controllers
@@ -12,9 +13,11 @@ namespace SalesWeb.Controllers
     {
 
         private readonly SellerService _service;
+        private readonly DepartmentService _dpService;
 
-        public SellersController(SellerService service)
+        public SellersController(SellerService service, DepartmentService dpService)
         {
+            _dpService = dpService;
             _service = service;
         }
 
@@ -26,7 +29,9 @@ namespace SalesWeb.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var departments = _dpService.FindAll();
+            SellerFormViewModel viewModel = new SellerFormViewModel { Departments = departments };
+            return View(viewModel);
         }
 
         [HttpPost]

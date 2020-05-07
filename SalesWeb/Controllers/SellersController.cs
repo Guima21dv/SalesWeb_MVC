@@ -49,6 +49,20 @@ namespace SalesWeb.Controllers
             return View(seller);
         }
 
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Seller seller = _service.FindById(id.Value);
+            if (seller == null)
+            {
+                return NotFound();
+            }
+            return View(seller);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

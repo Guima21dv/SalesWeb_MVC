@@ -25,7 +25,7 @@ namespace SalesWeb.Controllers
             if (!initialDate.HasValue)
                 initialDate = new DateTime(DateTime.Now.Year, 1, 1);
             if (!finalDate.HasValue)
-                finalDate = DateTime.Now.Date;
+                finalDate = DateTime.Now;
 
             ViewData["initialDate"] = initialDate.Value.ToString("yyyy-MM-dd");
             ViewData["finalDate"] = finalDate.Value.ToString("yyyy-MM-dd");
@@ -34,9 +34,18 @@ namespace SalesWeb.Controllers
             return View(result);
         }
 
-        public async Task<IActionResult> GroupingSearch()
+        public async Task<IActionResult> GroupingSearch(DateTime? initialDate, DateTime? finalDate)
         {
-            return View();
+            if (!initialDate.HasValue)
+                initialDate = new DateTime(DateTime.Now.Year, 1, 1);
+            if (!finalDate.HasValue)
+                finalDate = DateTime.Now;
+
+            ViewData["initialDate"] = initialDate.Value.ToString("yyyy-MM-dd");
+            ViewData["finalDate"] = finalDate.Value.ToString("yyyy-MM-dd");
+
+            var result = await _srservice.FindByDateGroupingAsync(initialDate, finalDate);
+            return View(result);
         }
     }
 }
